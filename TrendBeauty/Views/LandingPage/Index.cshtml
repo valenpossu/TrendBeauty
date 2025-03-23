@@ -1,0 +1,218 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Valentina-Politecnico GranColombiano">
+    <title>TrendBeauty</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+    </style>
+
+    <link rel="stylesheet" href="~/Content/Style.css" />
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="@Url.Action("Index","LandingPage")">TrendBeauty</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#idNosotros">Conócenos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#idContacto">Contacto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("CrearCuenta","Acceso")">Registrarse</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="~/img/slider1.jpg" class="d-block w-100" alt="Productos de belleza">
+
+                    <div class="container">
+                        <div class="carousel-caption text-start">
+                            <h1>Descubre lo mejor en belleza</h1>
+                            <p>Explora nuestros productos exclusivos y servicios de estilistas profesionales.</p>
+                            <p><a class="btn btn-lg btn-primary" href="@Url.Action("CrearCuenta","Acceso")">Ver Productos</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="~/img/slider2.jpg" class="d-block w-100" alt="tendencias de belleza"/>
+
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>Tendencias en maquillaje y cuidado personal</h1>
+                            <p>Encuentra las mejores marcas en cosmética, skincare y más.</p>
+                            <p><a class="btn btn-lg btn-primary" href="@Url.Action("CrearCuenta","Acceso")">Comprar Ahora</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="~/img/slider3.jpg" class="d-block w-100" alt="citas de belleza" />
+
+                    <div class="container">
+                        <div class="carousel-caption text-end">
+                            <h1>Reserva tu cita con los mejores estilistas</h1>
+                            <p>Transforma tu look con expertos en peluquería y maquillaje.</p>
+                            <p><a class="btn btn-lg btn-primary" href="@Url.Action("CrearCuenta","Acceso")">Agendar Cita</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+
+        <div class="container marketing">
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="~/img/Aceite.jpg" class="bd-placeholder-img rounded-circle" width="140" height="140" alt="Aceite de Argán"/>
+                    <h2>Aceite de Argan</h2>
+                    <p>Nuestro aceite capilar nutre, repara y fortalece tu cabello desde la raíz hasta las puntas. Su fórmula ligera aporta brillo, suavidad y protección contra el daño diario.</p>
+                    <p><a class="btn btn-secondary" href="#">Ver Detalles &raquo;</a></p>
+                </div>
+                <div class="col-lg-4">
+                    <img src="~/img/Pestañina.jpg" class="bd-placeholder-img rounded-circle" width="140" height="140" alt="Pestañina" />
+
+                    <h2>Pestañina</h2>
+                    <p> Consigue unas pestañas impactantes con nuestra máscara de alta definición y volumen extremo. Fórmula de larga duración y resistente al agua para una mirada deslumbrante</p>
+                    <p><a class="btn btn-secondary" href="#">Ver Detalles &raquo;</a></p>
+                </div>
+                <div class="col-lg-4">
+                    <img src="~/img/Desmaqui.jpg" class="bd-placeholder-img rounded-circle" width="140" height="140" alt="Desmaquillante" />
+
+                    <h2>Desmaquillante</h2>
+                    <p>Remueve el maquillaje sin esfuerzo con nuestro desmaquillante suave y eficaz. Enriquecido con ingredientes nutritivos para dejar tu piel fresca, hidratada y radiante.</p>
+                    <p><a class="btn btn-secondary" href="#">Ver Detalles &raquo;</a></p>
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette" id="idNosotros">
+                <div class="col-md-7">
+                    <h2 class="featurette-heading">TrendBeauty. <span class="text-muted">Más de 10 años de Experiencia en el sector.</span></h2>
+                    <p class="lead">Somos una empresa comprometida con la excelencia y la innovación, dedicada a ofrecer productos y servicios de alta calidad en el sector de la belleza y el estilismo. Nuestro equipo de profesionales altamente capacitados trabaja con pasión para brindar experiencias únicas a nuestros clientes, garantizando satisfacción y confianza en cada servicio. Nos esforzamos por estar a la vanguardia de las tendencias, utilizando tecnologías y técnicas de última generación para proporcionar soluciones adaptadas a las necesidades de cada persona. ¡Descubre con nosotros el equilibrio perfecto entre estilo, bienestar y profesionalismo!</p>
+                </div>
+                <div class="col-md-5">
+                    <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" src="~/img/img01.jpg" alt="Empresa" />
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette">
+                <div class="col-md-7 order-md-2">
+                    <h2 class="featurette-heading">Nuestros clientes <span class="text-muted">opinan.</span></h2>
+                    <p class="lead">"Desde que descubrí este salón, no confío mi cabello a nadie más. Los estilistas son profesionales y siempre entienden exactamente lo que quiero. ¡Lo recomiendo totalmente! – Evelin M."</p>
+                    <p class="lead">"El servicio es impecable y el ambiente súper acogedor. Me hicieron un cambio de look increíble y recibí muchos cumplidos. Sin duda, volveré pronto. – Diego G."</p>
+                    <p class="lead">"Desde que uso los productos de TrendBeauty, mi cabello se siente más fuerte y saludable. El tratamiento de keratina es increíble, deja mi pelo sedoso y sin frizz por semanas.– Ana R."</p>
+                </div>
+                <div class="col-md-5 order-md-1">
+                    <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" src="~/img/Clientes.jpg" alt="Clientes" />
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette align-items-center" id="idContacto">
+                <div class="col-md-7">
+                    <h2 class="featurette-heading">¿Te gustaría saber más?<span class="text-muted">¡Escríbenos!</span></h2>
+                    <p class="lead">¿Te interesa alguno de nuestros productos o prefieres visitarnos en uno de nuestros puntos físicos? Déjanos tu mensaje y te brindaremos toda la información que necesites de inmediato.</p>
+                </div>
+                <div class="col-md-5 d-flex flex-column justify-content-center h-100">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Correo Electronico</label>
+                            <input type="email" class="form-control" id="txtCorreo" aria-describedby="emailHelp">
+                            <div id="emailHelp" class="form-text">Nos pondremos en contacto contigo.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comentario</label>
+                            <input type="text" class="form-control" id="txtComentario">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+        </div>
+        <footer class="container">
+            <p class="float-end"><a href="#">Subir</a></p>
+            <p>&copy; 2025–2025 TrendBeauty, Inc. &middot;  &middot; <a href="#">Métodos de pago</a> &middot; <a href="#">Preguntas frecuentes (FAQ)</a></p>
+            <div class="social-media">
+                <a>Nuestras redes sociales:</a>
+                <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.whatsapp.com/?lang=es_LA" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </footer>
+    </main>
+
+
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+
+
+</body>
+</html>
+

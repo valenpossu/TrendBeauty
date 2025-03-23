@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - TrendBeauty</title>
+    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+</head>
+<body class="sb-nav-fixed">
+
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="@Url.Action("Index","Home")">TrendBeauty</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!"><b>@User.Identity.Name</b></a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="@Url.Action("CerrarSesion","Acceso")">Cerrar Sesion</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Resumen</div>
+                        <a class="nav-link" href="@Url.Action("Index","Home")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        @if (Session["Rol"] != null && Session["Rol"].ToString() == "AD")
+                        {
+                            <a class="nav-link" href="@Url.Action("Usuarios","Home")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Usuarios
+                            </a>
+
+                        }
+                        @if (Session["Rol"] != null && Session["Rol"].ToString() == "US")
+                        {
+                            <a class="nav-link" href="@Url.Action("Compras","Mantenedor")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Comprar
+                            </a>
+                        }
+                        @if (Session["Rol"] != null && Session["Rol"].ToString() == "AD")
+                        {
+                            <div class="sb-sidenav-menu-heading">Negocio</div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Administrar
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="@Url.Action("Index","Negocio")">
+                                        <div class="sb-nav-link-icon"><i class="bi bi-house"></i></div>Datos Negocio
+                                    </a>
+                                </nav>
+                            </div>
+                        }
+                        @if (Session["Rol"] != null && Session["Rol"].ToString() == "US")
+                        {
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts1" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Ver Tiendas Fisicas
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts1" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="@Url.Action("Index","Negocio")">
+                                        <div class="sb-nav-link-icon"><i class="bi bi-house"></i></div>Cali
+                                    </a>
+                                </nav>
+                            </div>
+                        }
+                        @if (Session["Rol"] != null && Session["Rol"].ToString() == "AD")
+                        {
+                            <div class="sb-sidenav-menu-heading">Mantenimiento</div>
+                            <a class="nav-link" href="@Url.Action("Index","Mantenedor")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Categorias
+                            </a>
+                            <a class="nav-link" href="@Url.Action("Servicios","Mantenedor")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-bookmark"></i></div>
+                                Servicios
+                            </a>
+                            <a class="nav-link" href="@Url.Action("Productos","Mantenedor")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-boxes"></i></div>
+                                Productos
+                            </a>
+                        }
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    @RenderBody()
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright TrendBeauty SAS &copy; Cali,Colombia </div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a id="Fecha" href="#">@DateTime.Now.ToString("yyyy/MM/dd")</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/complementos")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

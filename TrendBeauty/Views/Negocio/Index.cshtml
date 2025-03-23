@@ -1,0 +1,260 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item active">Negocio</li>
+    <li class="breadcrumb-item active">Administrar</li>
+    <li class="breadcrumb-item"><a href="@Url.Action("Index","Negocio")">Datos Negocio</a></li>
+</ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-users me-1"></i> Lista de Negocios
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+            </div>
+        </div>
+
+        <hr />
+        <table id="tabla" class="display cell-border" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Nit</th>
+                    <th>Direccion</th>
+                    <th>Correo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Negocio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input id="txtId" type="hidden" value="0" />
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <label for="txtNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="txtNombre" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtNit" class="form-label">Nit</label>
+                        <input type="number" class="form-control" id="txtNit" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtDireccion" class="form-label">Direccion</label>
+                        <input type="text" class="form-control" id="txtDireccion" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtCorreo" class="form-label">Correo</label>
+                        <input type="text" class="form-control" id="txtCorreo" autocomplete="off">
+                    </div>
+
+                </div>
+                @*mensaje de alerta*@
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="mensajeError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    
+    <script>
+
+        var tabladata; //almacenar el data table
+        var filaSeleccionada;
+
+        tabladata = $("#tabla").DataTable({
+            responsive: true,
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarNegocio", "Negocio")',//url para hacer el llamado a una accion
+                type: "GET",
+                dataType: "json",
+            },
+            "columns": [
+                { "data": "Nombre" },
+                { "data": "Nit" },
+                { "data": "Direccion" },
+                { "data": "Correo" },
+                {
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fa fa-pen"></i></button>' +
+                        '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fa fa-trash"></i></button>',
+                    "orderable": false,
+                    "searchdable": false,
+                    "width": "90px"
+                }
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json"
+            }
+        }); //convierte la tabla en un datatable
+
+        function abrirModal(json) {//recibe un objecto de tipo json
+
+            $("#txtId").val(0);
+            $("#txtNombre").val("");
+            $("#txtNit").val("");
+            $("#txtDireccion").val("");
+            $("#txtCorreo").val("");
+
+            $("#mensajeError").hide();
+
+            if (json != null) {
+
+                $("#txtId").val(json.IdNegocio);
+                $("#txtNombre").val(json.Nombre);
+                $("#txtNit").val(json.Nit);
+                $("#txtDireccion").val(json.Direccion);
+                $("#txtCorreo").val(json.Correo);
+            }
+
+            $("#FormModal").modal("show")
+        }
+
+        function Guardar() {
+
+            var DatosNegocio = {
+                IdNegocio : $("#txtId").val(),
+                Nombre : $("#txtNombre").val(),
+                Nit : $("#txtNit").val(),
+                Direccion : $("#txtDireccion").val(),
+                Correo : $("#txtCorreo").val(),
+            }
+
+            jQuery.ajax({
+                url: '@Url.Action("GuardarNegocio", "Negocio")',//url para hacer el llamado a una accion
+                type: "POST", //el tipo
+                data: JSON.stringify({ oDatosNegocio: DatosNegocio }), //stringify: convierte el json a texto //el objeto que se va a enviar; el nombre del objeto debe ser el mismo declarado en el controlador (oUsuario)
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                //Metodos de ajax; success uando todo es exitoso, error cuando no lo fue y beforeSend: acciones que se van a ejecutar antes y durante la ejecucion del metodo guardar
+                success: function (data) {
+                     //data (puede ser cualquier nombre, generalmente se pone data),  data es todo el json que se creo en el controlador (Json(new { resultado = Resultado, mensaje = Mensaje})
+
+                    $(".modal-body").LoadingOverlay("hide"); //para que se oculte el 'cargando..'
+
+                    //USUARIO NUEVO
+                    if (DatosNegocio.IdNegocio == 0) {
+
+                        if (data.Resultado != 0) { //Cuando se ha creado el usuario, el metodo registrar nos devuelve el id del cliente creado; ese valor se almacena en resultado
+                            DatosNegocio.IdNegocio = data.Resultado;
+                            tabladata.row.add(DatosNegocio).draw(false); //pinta el nuevo usuario en la tabla
+                            $("#FormModal").modal("hide"); //ocultamos el modal
+                        }
+                        else {
+                            $("#mensajeError").text(data.Mensaje);
+                            $("#mensajeError").show();
+                        }
+
+                    } else {
+
+                        if (data.Resultado) {
+
+                            //USUARIO EDITAR
+                            tabladata.row(filaSeleccionada).data(DatosNegocio).draw(false);
+                            filaSeleccionada = null;
+                            $("#FormModal").modal("hide");
+                        }
+                        else {
+                            $("#mensajeError").text(data.Mensaje);
+                            $("#mensajeError").show();
+                        }
+
+
+                    }
+                 },
+                 error: function (data) {
+
+                     $(".modal-body").LoadingOverlay("hide"); //para que se oculte el 'cargando..'
+                     $("#mensajeError").text("Error Ajax");
+                     $("#mensajeError").show();
+                 },
+                 beforeSend: function () {
+                     $(".modal-body").LoadingOverlay("show", { //libreria LoadingOverlay es la que permite mostrar que algo esta cargando
+                         imageResizeFactor: 2,
+                         text: "Cargando...",
+                         size: 14
+                     });
+                 }
+            })
+
+        }
+
+        //BOTON PARA EDITAR
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+            filaSeleccionada = $(this).closest("tr") //obtener la fila que ha sido seleccionada
+            var data = tabladata.row(filaSeleccionada).data() //Obtenemos la informacion de la fila
+            abrirModal(data) //el metodo abrir modal esta recibiendo los datos de la fila seleccionada
+        }) //cada que se haga click en el boton con la clase 'btn-editar' hará una funcion
+
+        //BOTON PARA ELIMINAR
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+            usuarioSeleccionado = $(this).closest("tr") //obtener la fila que ha sido seleccionada
+            var data = tabladata.row(usuarioSeleccionado).data() //Obtenemos la informacion de la fila
+            /*console.log(tabladata.row(usuarioSeleccionado).data())*/
+
+            //la alerta, el mensaje de eliminar
+            swal({
+                title: "Eliminar",
+                text: "Desea Eliminar El Negocio?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "SI",
+                cancelButtonText: "NO",
+                closeOnConfirm: true
+            },
+                function () {
+
+                     jQuery.ajax({
+                        url: '@Url.Action("EliminarNegocio", "Negocio")',//url para hacer el llamado a una accion
+                         type: "POST",
+                         data: JSON.stringify({ id: data.IdNegocio }),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+                             if (data.resultado) {
+                                 tabladata.row(usuarioSeleccionado).remove().draw();
+                             } else {
+                                 swal("No se pudo eliminar", data.Mensaje, "success")
+                             }
+                         },
+                         error: function (error) {
+                             console.log(error)
+                         }
+                    })
+             });
+        }) //cada que se haga click en el boton con la clase 'btn-eliminar' hará una funcion
+    </script>    
+    
+    
+}

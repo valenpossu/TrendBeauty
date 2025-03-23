@@ -1,0 +1,266 @@
+﻿
+@{
+    ViewBag.Title = "Servicios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item active">Mantenedor</li>
+    <li class="breadcrumb-item"><a href="@Url.Action("Servicios","Mantenedor")">Servicios</a></li>
+</ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-users me-1"></i> Lista de Servicios
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+            </div>
+        </div>
+
+        <hr />
+        <table id="tabla" class="display cell-border" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Valor</th>
+                    <th>Categoria</th>
+                    <th>Activo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Servicios</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input id="txtId" type="hidden" value="0" />
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <label for="txtNombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="txtNombre" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtDescripcion" class="form-label">Descripcion</label>
+                        <input type="text" class="form-control" id="txtDescripcion" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtValor" class="form-label">Valor</label>
+                        <input type="text" class="form-control" id="txtValor" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="cboCategoria" class="form-label">Categoria</label>
+                        <select class="form-select" id="cboCategoria">
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="cboActivo" class="form-label">Activo</label>
+                        <select class="form-select" id="cboActivo">
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+
+                </div>
+                @*mensaje de alerta*@
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="mensajeError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        var tabladata; //almacenar el data table
+        var filaSeleccionada;
+
+        tabladata = $("#tabla").DataTable({
+            responsive: true,
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarServicios", "Mantenedor")',//url para hacer el llamado a una accion
+                type: "GET",
+                dataType: "json",
+            },
+            "columns": [
+                { "data": "NombreServicio" },
+                { "data": "Descripcion" },
+                { "data": "Valor" },
+                {
+                    "data": "oCategoria", "render": function (data) {
+                        return data.Nombre
+                    }
+
+                },
+                {
+                    "data": "Activo", "render": function (valor) {
+                        if (valor) {
+                            return '<span class="badge bg-success">Si</span>'
+                        } else {
+                            return '<span class="badge bg-danger">No</span>'
+                        }
+                    }
+
+                },
+                {
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fa fa-pen"></i></button>',
+                    "orderable": false,
+                    "searchdable": false,
+                    "width": "90px"
+                }
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json"
+            }
+        }); //convierte la tabla en un datatable
+
+        //Llenar select categorias
+        jQuery.ajax({
+            url: '@Url.Action("ListarCategorias", "Mantenedor")',//url para hacer el llamado a una accion
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("<option>").attr({ "value": "0", "disable": "true" }).text("Seleccionar").appendTo("#cboCategoria"); //valor por defecto
+
+                $.each(data.data, function (index, item) { //index es el numero de registros que existen en la lista, y item: valor de cada uno de los elementos.
+                    $("<option>").attr({ "value": item.IdCategoria }).text(item.Nombre).appendTo("#cboCategoria"); //option la etiqueta del select; appendTo: 'asignar a' -> al select cbomarca
+                }) //recorrer toda la lista de marcas; iterar una lista; el primer data(hace referencia a este function (data) y el otro data (hace referencia al data del metodo del controlador data = oLista )
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+
+        function abrirModal(json) {//recibe un objecto de tipo json
+
+            $("#txtId").val(0);
+            $("#txtNombre").val("");
+            $("#txtDescripcion").val("");
+            $("#txtValor").val("");
+            $("#cboCategoria").val($("#cboCategoria option:first").val());
+            $("#cboActivo").val(1);
+
+            $("#mensajeError").hide();
+
+
+            if (json != null) {
+
+                $("#txtId").val(json.IdServicio);
+                $("#txtNombre").val(json.NombreServicio);
+                $("#txtDescripcion").val(json.Descripcion);
+                $("#txtValor").val(json.Valor);
+                $("#cboCategoria").val(json.oCategoria.IdCategoria);
+                $("#cboActivo").val(json.Activo == true ? 1 : 0);
+
+            }
+            $("#FormModal").modal("show")
+        }
+
+        function Guardar() {
+            var Servicio = {
+                IdServicio: $("#txtId").val(),
+                NombreServicio: $("#txtNombre").val(),
+                Descripcion: $("#txtDescripcion").val(),
+                Valor: parseFloat($("#txtValor").val()),
+                oCategoria: {
+                    IdCategoria: $("#cboCategoria option:selected").val(), //obtenemos el option que este seleccionado
+                    Nombre: $("#cboCategoria option:selected").text()
+                },
+                Activo: $("#cboActivo").val() == 1 ?true: false // val sirve para obtener un valor y asignar ese valor
+            }
+
+             jQuery.ajax({
+                url: '@Url.Action("GuardarServicios", "Mantenedor")',//url para hacer el llamado a una accion
+                type: "POST", //el tipo
+                data: JSON.stringify({ oServicios: Servicio }), //stringify: convierte el json a texto //el objeto que se va a enviar; el nombre del objeto debe ser el mismo declarado en el controlador (oUsuario)
+                dataType: "json",
+                 contentType: "application/json; charset=utf-8",
+                //Metodos de ajax; success uando todo es exitoso, error cuando no lo fue y beforeSend: acciones que se van a ejecutar antes y durante la ejecucion del metodo guardar
+                success: function (data) {
+                     //data (puede ser cualquier nombre, generalmente se pone data),  data es todo el json que se creo en el controlador (Json(new { resultado = Resultado, mensaje = Mensaje})
+
+                    $(".modal-body").LoadingOverlay("hide"); //para que se oculte el 'cargando..'
+
+                    //SERVICIO NUEVO
+                    if (Servicio.IdServicio == 0) {
+
+                        if (data.Resultado != 0) { //Cuando se ha creado el usuario, el metodo registrar nos devuelve el id del cliente creado; ese valor se almacena en resultado
+                            Servicio.IdServicio = data.Resultado;
+                            tabladata.row.add(Servicio).draw(false); //pinta el nuevo usuario en la tabla
+                            $("#FormModal").modal("hide"); //ocultamos el modal
+                        }
+                        else {
+                            $("#mensajeError").text(data.Mensaje);
+                            $("#mensajeError").show();
+                        }
+
+                    } else {
+
+                        if (data.Resultado) {
+
+                            //SERVICIO EDITAR
+                            tabladata.row(filaSeleccionada).data(Servicio).draw(false);
+                            filaSeleccionada = null;
+                            $("#FormModal").modal("hide");
+                        }
+                        else {
+                            $("#mensajeError").text(data.Mensaje);
+                            $("#mensajeError").show();
+                        }
+
+
+                    }
+                 },
+                 error: function (data) {
+
+                     $(".modal-body").LoadingOverlay("hide"); //para que se oculte el 'cargando..'
+                     $("#mensajeError").text("Error Ajax");
+                     $("#mensajeError").show();
+                 },
+                 beforeSend: function () {
+                     $(".modal-body").LoadingOverlay("show", { //libreria LoadingOverlay es la que permite mostrar que algo esta cargando
+                         imageResizeFactor: 2,
+                         text: "Cargando...",
+                         size: 14
+                     });
+                 }
+             })
+        }
+
+        //BOTON PARA EDITAR
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+            filaSeleccionada = $(this).closest("tr") //obtener la fila que ha sido seleccionada
+            var data = tabladata.row(filaSeleccionada).data() //Obtenemos la informacion de la fila
+            abrirModal(data) //el metodo abrir modal esta recibiendo los datos de la fila seleccionada
+        }) //cada que se haga click en el boton con la clase 'btn-editar' hará una funcion
+    </script>
+}
+
