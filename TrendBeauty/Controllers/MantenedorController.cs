@@ -1,11 +1,14 @@
 ﻿using CapaEntidad;
 using CapaNegocio;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 
 namespace GestionPeluqueria.Controllers
 {
@@ -193,11 +196,14 @@ namespace GestionPeluqueria.Controllers
 
         //Metodo para registrar y editar
         [HttpPost]
-        public JsonResult GuardarProducto(Producto oProducto)
+        public JsonResult GuardarProducto(string objeto, HttpPostedFileBase archivoImagen)
         {
-            object Resultado; //object nos permite que en la variable resultado podamos almacenar cualquier valor
+            object Resultado;
             string Mensaje = string.Empty;
+            bool GuardarImagenExito = true;
 
+            Producto oProducto = new Producto();
+            oProducto = JsonConvert.DeserializeObject<Producto>(objeto);
 
             if (oProducto.IdProducto == 0)
             {
@@ -208,7 +214,41 @@ namespace GestionPeluqueria.Controllers
                 Resultado = new CN_Producto().Editar(oProducto, out Mensaje); //out: parametro de salida
             }
 
-            return Json(new { Resultado = Resultado, Mensaje = Mensaje }, JsonRequestBehavior.AllowGet); //El json que se envia //declaramos una propiedad 'Resultado' que va a almacenar el valor de Resultado, igual para el Mensaje
+            if (Mensaje == string.Empty)
+            {
+                if (archivoImagen != null)
+                {
+                    string ruta_guardar = ConfigurationManager.AppSettings["ServidorDeFotos"]; //ruta donde se va a guardar la imagen
+                    string Extension = Path.GetExtension(archivoImagen.FileName); //obtener la extension de la imagen
+                    string nombre_imagen = string.Concat("Imagen-", oProducto.IdProducto.ToString(), Extension); // nombre como vamos a gurdar la imagen
+
+                    try
+                    {
+                        archivoImagen.SaveAs(Path.Combine(ruta_guardar, nombre_imagen)); //guarda en la ruta definida y con el nombre definido
+                    }
+                    catch (Exception ex)
+                    {
+                        string msg = ex.Message;
+                        GuardarImagenExito = false;
+                    }
+
+                    if (GuardarImagenExito)
+                    {
+                        oProducto.RutaImagen = ruta_guardar;
+                        oProducto.NombreImagen = nombre_imagen;
+                        oProducto.IdProducto = Convert.ToInt32(Resultado);
+
+                        bool rspta = new CN_Producto().GuardarDatosImagen(oProducto, out Mensaje);
+                    }
+                    else
+                    {
+                        Mensaje = "Se Guardo El Producto pero hubo problemas con la imagen";
+                    }
+
+                }
+            }
+
+            return Json(new { Resultado = Resultado, Mensaje = Mensaje }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -222,6 +262,24 @@ namespace GestionPeluqueria.Controllers
             return Json(new { resultado = respuesta, Mensaje = Mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult ImagenProducto(int id)
+        {
+            bool conversion;
+            Producto oProducto = new CN_Producto().Listar().Where(p => p.IdProducto == id).FirstOrDefault();
+
+            string textoBase64 = CN_Recursos.ConvertirBase64(Path.Combine(oProducto.RutaImagen, oProducto.NombreImagen), out conversion);
+
+            return Json(new
+            {
+                conversion = conversion,
+                textobase64 = textoBase64,
+                extension = Path.GetExtension(oProducto.NombreImagen) //obtenemos la extension
+            },
+            JsonRequestBehavior.AllowGet
+            );
+
+        }
         #endregion
     }
 }

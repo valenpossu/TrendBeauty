@@ -38,7 +38,7 @@ namespace CapaNegocio
             if (string.IsNullOrEmpty(Mensaje))
             {
                 string Clave = CN_Recursos.GenerarClave();
-                string Asunto = "Creacion Cuenta 'GestionPeluqueria'";
+                string Asunto = "Creacion Cuenta 'TrendBeauty'";
                 string mensaje_correo = "<h3>Su cuenta fue creada con exito</h3><br><p>Su contraseña para acceder es !clave!</p>";
                 mensaje_correo = mensaje_correo.Replace("!clave!", Clave);
 

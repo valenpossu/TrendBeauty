@@ -39,6 +39,8 @@ namespace CapaDatos
                                     oCategoria = new Categoria(){ IdCategoria = Convert.ToInt32(dr["IdCategoria"]), Nombre = dr["Categoria"].ToString() },
                                     Activo = Convert.ToBoolean(dr["Activo"].ToString()),
                                     Observaciones = dr["Observaciones"].ToString(),
+                                    NombreImagen = dr["NombreImagen"].ToString(),
+                                    RutaImagen = dr["RutaImagen"].ToString(),
                                 });
 
                         }
@@ -408,6 +410,46 @@ namespace CapaDatos
             }
 
             return idautogenerado;
+        }
+
+        public bool GuardarDatosImagen(Producto oProducto, out string Mensaje)
+        {
+            bool Resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+                {
+                    string query = "UPDATE Productos SET RutaImagen = @RutaImagen, NombreImagen = @NombreImagen WHERE IdProducto = @IdProducto";
+
+                    SqlCommand cmd = new SqlCommand(query, oconexion);
+                    cmd.Parameters.AddWithValue("@RutaImagen", oProducto.RutaImagen);
+                    cmd.Parameters.AddWithValue("@NombreImagen", oProducto.NombreImagen);
+                    cmd.Parameters.AddWithValue("@IdProducto", oProducto.IdProducto);
+                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.Text;
+
+                    oconexion.Open();
+
+                    if (cmd.ExecuteNonQuery() > 0) //validamos si las acciones realizadas son mayores a 0 (es decir si se realizo una accion)
+                    {
+                        Resultado = true;
+                    }
+                    else
+                    {
+                        Mensaje = "No se pudo Actualizar Imagen";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Resultado = false;
+                Mensaje = ex.Message;
+            }
+
+            return Resultado;
         }
 
         public bool Editar(Producto oProducto, out string Mensaje)

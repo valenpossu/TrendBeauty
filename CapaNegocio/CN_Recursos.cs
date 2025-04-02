@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace CapaNegocio
@@ -28,7 +29,7 @@ namespace CapaNegocio
             {
                 MailMessage mail = new MailMessage();
                 mail.To.Add(Correo); //A donde se va a enviar el mensaje, a quien va dirigido.
-                mail.From = new MailAddress("peluqueriamparo27@gmail.com");//desde que correo se esta enviando el mensaje
+                mail.From = new MailAddress("valenpossu@gmail.com");//desde que correo se esta enviando el mensaje
                 mail.Subject = Asunto; //Asunto del correo
                 mail.Body = Mensaje; //el cuerpo del correo
                 mail.IsBodyHtml = true;
@@ -36,7 +37,7 @@ namespace CapaNegocio
                 //servidor que se va a encargar de enviar el mensaje
                 var smtp = new SmtpClient()
                 {
-                    Credentials = new NetworkCredential("peluqueriamparo27@gmail.com", "byuidalcknhcxqwz"), //contraseña generada desde gmail, verificacion en dos pasos (Activar) y luego contraseñas de aplaicaciones y se genera
+                    Credentials = new NetworkCredential("valenpossu@gmail.com", "gevlhuxrsqxvxjnz"), //contraseña generada desde gmail, verificacion en dos pasos (Activar) y luego contraseñas de aplaicaciones y se genera
                     Host = "smtp.gmail.com",
                     Port = 587,
                     EnableSsl = true
@@ -67,6 +68,24 @@ namespace CapaNegocio
             }
 
             return sb.ToString();
+        }
+
+        public static string ConvertirBase64(string ruta, out bool conversion)
+        {
+            string textoBase64 = string.Empty;
+            conversion = true;
+
+            try
+            {
+                byte[] bytes = File.ReadAllBytes(ruta); //pasar la ruta donde se encuentra la imagen lo convierte en un array de bytes
+                textoBase64 = Convert.ToBase64String(bytes);
+            }
+            catch
+            {
+                conversion = false;
+            }
+
+            return textoBase64;
         }
     }
 }

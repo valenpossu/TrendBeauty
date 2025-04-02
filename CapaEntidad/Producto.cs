@@ -19,5 +19,7 @@ namespace CapaEntidad
         public bool Activo { get; set; }
         public int Stock { get; set; }
         public int IdUsuario { get; set; }
+        public string RutaImagen { get; set; }
+        public string NombreImagen { get; set; }
     }
 }

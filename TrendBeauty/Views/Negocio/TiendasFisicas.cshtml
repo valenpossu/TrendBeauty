@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewBag.Title = "TiendasFisicas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiendas</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <h2>¡Encuentranos cerca a ti!</h2>
+    <div id="mapa" style="width: 100%; height: 400px;"></div>
+
+    <script>
+        var map = L.map('mapa').setView([4.710989, -74.072090], 12); // Bogotá, Colombia
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        L.marker([3.451646, -76.531985]).addTo(map)
+            .bindPopup("Cali, Colombia")
+            .openPopup();
+    </script>
+</body>
+</html>
+
+

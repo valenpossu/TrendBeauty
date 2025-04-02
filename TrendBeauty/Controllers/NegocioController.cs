@@ -17,6 +17,11 @@ namespace GestionPeluqueria.Controllers
             return View();
         }
 
+        public ActionResult TiendasFisicas()
+        {
+            return View();
+        }
+
         #region Negocio
         public JsonResult ListarNegocio()
         {
