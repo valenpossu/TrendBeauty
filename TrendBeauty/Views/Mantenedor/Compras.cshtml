@@ -38,37 +38,40 @@
     </style>
 </head>
 <body>
-    <h1>Tienda Online</h1>
+    <ol class="breadcrumb mb-4 mt-4">
+        <li class="breadcrumb-item active">Resumen</li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Compras","Mantenedor")">Comprar</a></li>
+    </ol>
     <div id="products">
         <div class="product">
-            <img src="https://via.placeholder.com/100" alt="Producto 1">
+            <img src="~/img/Aceite.jpg" alt="Producto 1">
             <p>Producto 1</p>
             <p>$10.00</p>
-            <button onclick="addToCart('Producto 1', 10)">Agregar al Carrito</button>
+            <button class="btn btn-success btn-block">Agregar al Carrito</button>
         </div>
         <div class="product">
-            <img src="https://via.placeholder.com/100" alt="Producto 2">
+            <img src="~/img/Desmaqui.jpg" alt="Producto 2">
             <p>Producto 2</p>
             <p>$15.00</p>
-            <button onclick="addToCart('Producto 2', 15)">Agregar al Carrito</button>
+            <button class="btn btn-success btn-block">Agregar al Carrito</button>
         </div>
         <div class="product">
-            <img src="https://via.placeholder.com/100" alt="Producto 2">
+            <img src="~/img/Pestañina.jpg" alt="Producto 2">
             <p>Producto 2</p>
             <p>$15.00</p>
-            <button onclick="addToCart('Producto 3', 15)">Agregar al Carrito</button>
+            <button class="btn btn-success btn-block">Agregar al Carrito</button>
         </div>
         <div class="product">
-            <img src="https://via.placeholder.com/100" alt="Producto 2">
+            <img src="~/img/Aceite.jpg" alt="Producto 2">
             <p>Producto 2</p>
             <p>$15.00</p>
-            <button onclick="addToCart('Producto 4', 15)">Agregar al Carrito</button>
+            <button class="btn btn-success btn-block">Agregar al Carrito</button>
         </div>
         <div class="product">
-            <img src="https://via.placeholder.com/100" alt="Producto 2">
+            <img src="~/img/Aceite.jpg" alt="Producto 2">
             <p>Producto 2</p>
             <p>$15.00</p>
-            <button onclick="addToCart('Producto 5', 15)">Agregar al Carrito</button>
+            <button class="btn btn-success btn-block">Agregar al Carrito</button>
         </div>
     </div>
 
