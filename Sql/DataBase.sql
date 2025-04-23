@@ -1,4 +1,4 @@
-USE  TRENDBEAUTY
+USE TRENDBEAUTY
 GO
 IF OBJECT_ID('[dbo].[DatosNegocio]', 'U') IS NOT NULL
    PRINT 'Tabla DatosNegocio ya existe'
@@ -80,6 +80,24 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 END
 
+GO
+
+IF OBJECT_ID('[dbo].[Citas]', 'U') IS NOT NULL
+   PRINT 'Tabla Citas ya existe'
+ELSE
+BEGIN
+CREATE TABLE [dbo].[Citas](
+	[IdCita] [int] IDENTITY(1,1) NOT NULL,
+	[Tienda] [varchar](500) NULL,
+	[Fecha] [DATETIME] NULL,
+	[Hora] [varchar](100) NULL,
+	[FechaCreacion] [datetime] NULL DEFAULT GETDATE(),
+PRIMARY KEY CLUSTERED 
+(
+	[IdCita] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
 GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarUSuario](
